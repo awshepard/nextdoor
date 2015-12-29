@@ -24,6 +24,9 @@ args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG if args.debug else logging.INFO)
 
+# check this out for strategy pattern:
+# http://stackoverflow.com/questions/963965/how-to-write-strategy-pattern-in-python-differently-than-example-in-wikipedia
+
 
 def main():
     results = []
@@ -42,7 +45,7 @@ def main():
     logging.info("Average Piles = {0}".format(
         float(sum(results)) /
         float(len(results))))
-    logging.info("Results: {0}".format(','.join(str(x) for x in results)))
+    logging.debug("Results: {0}".format(','.join(str(x) for x in results)))
 
 
 if __name__ == '__main__':

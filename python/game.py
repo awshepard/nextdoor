@@ -51,6 +51,30 @@ class Game:
             self.board.append([])
             self.board[self.last_index].insert(0, card)
 
+    def turn_dad(self, card):
+        # I used to play "next door" very time, but my current approach
+        # is to skip two unless "next door" is the same value.  Not sure
+        # why I follow that rule, but the results seem marginally better
+        # than skipping two every time.
+
+        # decide where to put this card
+        if self.last_index > -1 and (
+            self.board[self.last_index][0].rank == card.rank
+        ):
+            self.board[self.last_index].insert(0, card)
+        elif self.last_index >= 2 and (
+            self.board[self.last_index - 2][0].suit == card.suit
+        ):
+            self.board[self.last_index - 2].insert(0, card)
+        elif self.last_index > -1 and (
+            self.board[self.last_index][0].suit == card.suit
+        ):
+            self.board[self.last_index].insert(0, card)
+        else:
+            self.last_index += 1
+            self.board.append([])
+            self.board[self.last_index].insert(0, card)
+
     def collapse_simple(self):
         moved_cards = True
         logging.debug("Begin collapse")

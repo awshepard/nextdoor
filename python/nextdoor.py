@@ -39,6 +39,9 @@ def main():
         turns = game.play()
         results.append(turns)
         logging.debug(game.board_to_string())
+        if turns == 1:
+            logging.info("Winning game:")
+            logging.info('\n'.join([item['card'].to_string() + ': ' + str(item['board']) for item in game.board_history]))
 
     logging.info("Total Games = %d" % args.games)
     logging.info("Total Wins = %d" % sum([x for x in results if x == 1]))

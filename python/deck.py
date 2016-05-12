@@ -2,6 +2,8 @@ import logging
 import random
 
 
+
+
 class Deck:
 
     def __init__(self):
@@ -12,6 +14,14 @@ class Deck:
 
     def shuffle(self):
         random.shuffle(self.deck)
+
+    @staticmethod
+    def populate_byte_array():
+        b = bytearray()
+        for suit in range(0, 4):
+            for rank in range(2, 15):
+                b.append(rank<<2 | suit)
+        return b
 
     def shuffle_perfect(self):
         # swap two cards to make suits meet
@@ -37,6 +47,22 @@ class Deck:
         return ','.join(map(str, self.deck))
 
 
+class SmallCard:
+    def __init__(self, rank, suit):
+        value = (rank << 2) | suit
+        logging.info("rank: %d, suit: %d, value: %d" % (rank, suit, value))
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+class SmallDeck:
+    def __init__(self):
+        self.deck = []
+        for i in range(0, 4):
+            for j in range(2, 15):
+                self.deck.append((j<<2)|i)
+
 class Card:
 
     rank_long = {
@@ -46,7 +72,7 @@ class Card:
     }
     rank_short = {
         2: '2', 3: '3', 4: '4', 5: '5', 6: '6',
-        7: '7', 8: '8', 9: '9', 10: '10', 11: 'J',
+        7: '7', 8: '8', 9: '9', 10: '0', 11: 'J',
         12: 'Q', 13: 'K', 14: 'A'
     }
     suit_long = {0: 'Spades', 1: 'Hearts', 2: 'Diamonds', 3: 'Clubs'}
@@ -55,6 +81,12 @@ class Card:
     def __init__(self, rank, suit):
         self.rank = rank
         self.suit = suit
+
+    @staticmethod
+    def small_card_to_string(sc):
+        rank = sc >> 2
+        suit = sc & 0b00000011
+        return Card.rank_long[rank] + " of " + Card.suit_long[suit]
 
     def to_string(self):
         return Card.rank_long[self.rank] + " of " + Card.suit_long[self.suit]

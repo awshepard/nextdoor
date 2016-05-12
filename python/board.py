@@ -133,6 +133,7 @@ class MoveTreeNode:
         self.min_child = -1
         self.sub_tree_branch_average = 0
         self.board_score = self.board.get_score()
+        self.moves_explored = 0
 
 
     def __str__(self):
@@ -145,10 +146,12 @@ class MoveTreeNode:
             Subtree Branch Average: %f
             Board Score: %d
             Board State: %s
+            Moves Explore: %d
         """ % (
                 self.move, self.min_piles,
                 ', '.join(str(child) for child in self.children_list), self.min_child,
-                len(self.board), self.sub_tree_branch_average, self.board_score,str(self.board))
+                len(self.board), self.sub_tree_branch_average, self.board_score,str(self.board),
+                self.moves_explored)
 
 
     def derive_child_list(self):
@@ -160,10 +163,17 @@ class MoveTreeNode:
     def update_board(self):
         self.board.perform_move(self.move)
 
+    def update_moves(self):
+        self.moves_explored = 0
+        for child in self.children_list:
+            self.moves_explored += self.children[child].moves_explored
+
     def has_any_children(self):
         return len(self.children) > 0
 
     def explore(self, depth = 1):
+        self.moves_explored += 1
+        #logging.info("my moves explored before children: %d" % self.moves_explored)
         if depth == 0:
             return
         for child in self.children_list:
@@ -183,7 +193,9 @@ class MoveTreeNode:
         total_branches = 0
         for child in self.children_list:
             total_branches += len(self.children[child].children_list)
+            self.moves_explored += self.children[child].moves_explored
         self.sub_tree_branch_average = float(total_branches) / float(len(self.children))
+        #logging.info("my moves explored after children: %d" % self.moves_explored)
 
             # if len(child_mtn.board) < self.min_piles:
             #     self.min_piles = len(child_mtn.board)

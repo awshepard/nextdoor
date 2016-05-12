@@ -12,6 +12,8 @@ import itertools
 import argparse
 import logging
 import time
+from pympler import asizeof
+import resource
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -38,9 +40,15 @@ def main():
     available_moves = board.get_available_moves()
     logging.debug(', '.join(str(move) for move in available_moves))
 
+
     mt = MoveTree()
     mtn = MoveTreeNode(None, 52, board)
     mt.root = mtn
+
+    # typical size in old version was ~32K
+
+    logging.info("Size of tree before:")
+    logging.info(asizeof.asizeof(mtn))
 
     logging.info("Tree root at creation:")
     logging.info(mtn)
@@ -49,17 +57,38 @@ def main():
     start_time = time.time()
     mtn.explore(args.depth)
     total_time = time.time() - start_time
+    moves_explored = mtn.moves_explored
 
     logging.info("Tree root after exploration:")
     logging.info(mtn)
+    # time per node hovers around 0.001152
     logging.info("Time to explore depth %d: %f" % (args.depth, total_time))
+    logging.info("Moves evaluated: %d, time per move : %f" % (moves_explored, total_time/float(moves_explored)))
 
     final_state, min_moves = mtn.fetch_min_list()
+    #mtn.update_moves()
     logging.info("Moves to minimum state:")
     logging.info(', '.join(str(move) for move in min_moves))
     logging.info("Final state:")
     logging.info(final_state)
 
+    #old values typically ranged from:
+    # depth 1
+    # 1 MB for tree size
+    # 10 MB for totally memory usage
+    # depth 2
+    # 20-45 MB for tree size
+    # 40-85 MB for totally memory usage
+    # depth 3
+    # 700 MB-1GB for tree size
+    # 1.3-2.0 GB for totally memory usage
+    # depth 4
+    # consumed 14+GB ram
+
+    logging.info("Size of tree after:")
+    logging.info(float(asizeof.asizeof(mtn))/float(pow(2,20)))
+    logging.info("Max memory usage:")
+    logging.info(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/float(pow(2,20)))# / float((pow(2,10))))
     # for child in mtn.children_list:
     #     logging.debug(mtn.children[child])
 

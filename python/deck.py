@@ -16,11 +16,11 @@ class Deck:
         random.shuffle(self.deck)
 
     @staticmethod
-    def populate_byte_array():
+    def init_small_deck():
         b = bytearray()
         for suit in range(0, 4):
             for rank in range(2, 15):
-                b.append(rank<<2 | suit)
+                b.append(rank<<4 | suit<<2)
         return b
 
     def shuffle_perfect(self):

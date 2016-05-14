@@ -24,6 +24,27 @@ class Board:
         self.piles = []
         self.piles.append([])
         self.last_index = 0
+
+    @staticmethod
+    def init_small_board():
+        p = []
+        p.append([])
+        return p
+
+    @staticmethod
+    def get_score_new(b):
+        return 0
+
+    # todo
+    @staticmethod
+    def perform_move_new(move, board):
+        return board
+
+    # todo
+    @staticmethod
+    def get_available_moves_new(board):
+        return [board[1],board[2]]
+
     def __len__(self):
         return len(self.piles) - 1
     def __getitem__(self, item):
@@ -58,6 +79,8 @@ class Board:
     def perform_move(self, move):
         self.move_pile(move.index,
                        (move.index - 1) if move.type=='nd' else (move.index - 3))
+
+
 
     def get_available_moves(self):
         logging.debug("Evaluate possible starting points")

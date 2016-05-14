@@ -1,6 +1,7 @@
 from pympler import asizeof
 import random
 import resource
+import array
 
 mem_usage = []
 list_sizes = []
@@ -14,14 +15,14 @@ for i in range(0,4):
 min_piles = 52
 max_piles = 0
 
-for i in range(1,100000):
+for i in range(1,1000):
     l = []
-    l.append(bytearray())
+    l.append(array.array('d'))
     index = 0
     for j in b:
-        if random.random() > 0:
+        if random.random() > 1:
             # create new byte array and advance index
-            l.append(bytearray())
+            l.append(array.array('d'))
             index += 1
         l[index].append(j)
 

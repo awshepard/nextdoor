@@ -93,6 +93,10 @@ def main():
     #     logging.debug(mtn.children[child])
 
 
+    # list of byte arrays takes up 825-2800 bytes for 11 to 42 piles
+    # 216 bytes for 1 pile, 3496 bytes for 52 piles
+
+
 
 
 if __name__ == '__main__':
